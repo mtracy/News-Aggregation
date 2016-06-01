@@ -25,7 +25,7 @@ except:
 conn.commit()
 
 try:
-	cur.execute("CREATE TABLE stories (id serial PRIMARY KEY, title varchar, source varchar, pubtime timestamp, link varchar, summary varchar, media varchar);")
+	cur.execute("CREATE TABLE stories (id serial PRIMARY KEY, title varchar, source varchar, subject varchar, pubtime timestamp, link varchar, summary varchar, media varchar);")
 	print("created table stories")
 except Exception as e:
 	print("Could not create table stories")
