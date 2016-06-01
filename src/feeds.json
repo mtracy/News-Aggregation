@@ -1,0 +1,12 @@
+[
+	{
+		"url"		: "http://rss.cnn.com/rss/edition.xml",
+		"source"	: "CNN",
+		"subject"	: "General News"
+	},
+	{
+		"url"		: "http://feeds.nbcnews.com/feeds/topstories",
+		"source"	: "NBC",
+		"subject"	: "General News"
+	}
+]
