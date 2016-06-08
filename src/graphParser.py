@@ -2,9 +2,16 @@ import rdflib
 from rdflib import Literal
 from rdflib.namespace import SKOS
 
+from nltk.corpus import stopwords
 from requests import get
 
 sss_url = "http://swoogle.umbc.edu/SimService/GetSimilarity"
+g=rdflib.Graph()
+g.parse("../taxonomy/tax.xml")
+cachedStopWords = stopwords.words("english")
+
+def stripwords(string):
+	return ' '.join([word for word in string.split() if word not in cachedStopWords])
 
 def sss(s1, s2, type='relation', corpus='webbase'):
     try:
@@ -16,9 +23,6 @@ def sss(s1, s2, type='relation', corpus='webbase'):
 
 
 def getParentTopic(string):
-	g=rdflib.Graph()
-	g.parse("../taxonomy/tax.xml")
-
 
 	qres = g.query(
 		"""SELECT DISTINCT ?s ?def
@@ -37,18 +41,43 @@ def getParentTopic(string):
 		if similarity > maxsim:
 			maxsim = similarity
 			maxtopic = subject
-			maxdef = definition
-		
-	return maxtopic, maxdef
+			maxdef = stripwords(definition)
+	print(maxsim)
+	print(maxtopic)
+	return maxtopic, maxsim
 		#for s,p,o in g.triples( (subject,  SKOS.narrower, None) ):
 		#	print "%s contains %s"%(s,o)
 
-s1="the city of Paris is on high alert, with floodwaters on the River Seine due to peak in the coming hours and heavy rain continuing to sweep across Europe"
-s2="The study, reporting and prediction of meteorological phenomena."
-#sim = sss(s1, s2)
-#print(sim)
+def highestSimChild(parent, sentence, simfloor):
 
-sub, definition = getParentTopic(s1)
+	maxtopic = -1
+	maxdef = -1
+	maxsim = -1
+	similarity = -1
+	for s,p,o in g.triples( (parent,  SKOS.narrower, None) ):
+		definition=g.value(subject=o, predicate=SKOS.definition, object=None) 
+		similarity = sss(sentence, definition)
+		if similarity > maxsim:
+			maxsim = similarity
+			maxtopic = o
+			maxdef = stripwords(definition)
+	print(maxsim)	
+	if maxsim <= simfloor:
+		maxsim = -1
+		maxtopic = -1
+	print(maxtopic)
+	return maxtopic, maxsim
 
-print(definition)
+
+
+def getPath(sentence):
+	path = []
+	sub, score = getParentTopic(sentence)
+	path.append(sub)
+	newsub, newscore = highestSimChild(sub, sentence, score)
+	while newsub != -1:
+		path.append(newsub)
+		newsub, newscore = highestSimChild(sub, sentence, newscore)
+	return path
+	
 
