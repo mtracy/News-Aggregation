@@ -4,7 +4,7 @@ import json
 import sys
 import feedparser
 import time
-
+import graphParser
 
 username = sys.argv[1]
 pword = sys.argv[2]
@@ -40,7 +40,7 @@ while(1):
     for post in feed.entries:
         title = post.title
         if checkDB(title) == 1:
-            print("skipping " + title)
+            #print("skipping " + title)
             break
         else:
 	    #string = title + ", " + post.published + ", " + post.links[0].href + ", " + post.summary + ", " + post.media_content[0]['url']
@@ -50,7 +50,12 @@ while(1):
                 media = post.media_content[0]['url']
             except Exception as e:
                 media = ""
-            cur.execute("INSERT INTO stories (title, source, subject, pubtime, link, summary, media) VALUES (%s, %s, %s, %s, %s, %s, %s);", (title, publisher, subject, post.published, post.links[0].href, post.summary, media))
+	    path = graphParser.getPath(post.summary)
+	    print(post.summary)
+	    print(path)
+	    print("--------")
+            cur.execute("INSERT INTO stories (title, source, subject, taxonomy, pubtime, link, summary, media) VALUES (%s, %s, %s, %s, %s, %s, %s, %s);", (title, publisher, subject, path, post.published, post.links[0].href, post.summary, media))
 
     conn.commit()
     time.sleep(refresh)
+    break

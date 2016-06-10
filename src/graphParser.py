@@ -42,8 +42,8 @@ def getParentTopic(string):
 			maxsim = similarity
 			maxtopic = subject
 			maxdef = stripwords(definition)
-	print(maxsim)
-	print(maxtopic)
+	#print(maxsim)
+	#print(maxtopic)
 	return maxtopic, maxsim
 		#for s,p,o in g.triples( (subject,  SKOS.narrower, None) ):
 		#	print "%s contains %s"%(s,o)
@@ -61,11 +61,11 @@ def highestSimChild(parent, sentence, simfloor):
 			maxsim = similarity
 			maxtopic = o
 			maxdef = stripwords(definition)
-	print(maxsim)	
+	#print(maxsim)	
 	if maxsim <= simfloor:
 		maxsim = -1
 		maxtopic = -1
-	print(maxtopic)
+	#print(maxtopic)
 	return maxtopic, maxsim
 
 
