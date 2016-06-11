@@ -10,8 +10,17 @@ g=rdflib.Graph()
 g.parse("../taxonomy/tax.xml")
 cachedStopWords = stopwords.words("english")
 
+qres = g.query(
+		"""SELECT DISTINCT ?s ?def
+			WHERE {
+				?s ?p ?o1 .
+				FILTER(NOT EXISTS {?s skos:broader ?o2}) 
+				?s skos:definition ?def .
+		   }""")
+
 def stripwords(string):
-	return ' '.join([word for word in string.split() if word not in cachedStopWords])
+	#return ' '.join([word for word in string.split() if word not in cachedStopWords])
+	return string
 
 def sss(s1, s2, type='relation', corpus='webbase'):
     try:
@@ -23,14 +32,6 @@ def sss(s1, s2, type='relation', corpus='webbase'):
 
 
 def getParentTopic(string):
-
-	qres = g.query(
-		"""SELECT DISTINCT ?s ?def
-			WHERE {
-				?s ?p ?o1 .
-				FILTER(NOT EXISTS {?s skos:broader ?o2}) 
-				?s skos:definition ?def .
-		   }""")
 
 	maxtopic = -1
 	maxdef = -1

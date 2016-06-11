@@ -50,12 +50,18 @@ while(1):
                 media = post.media_content[0]['url']
             except Exception as e:
                 media = ""
-	    path = graphParser.getPath(post.summary)
-	    print(post.summary)
+	    
+	    summary = post.summary.split("<")[0]
+	    if len(summary) > 0:
+            	path = graphParser.getPath(summary)
+	    else:
+	        path = graphParser.getPath(title)
+	    print(summary)
 	    print(path)
 	    print("--------")
-            cur.execute("INSERT INTO stories (title, source, subject, taxonomy, pubtime, link, summary, media) VALUES (%s, %s, %s, %s, %s, %s, %s, %s);", (title, publisher, subject, path, post.published, post.links[0].href, post.summary, media))
+            cur.execute("INSERT INTO stories (title, source, subject, taxonomy, pubtime, link, summary, media) VALUES (%s, %s, %s, %s, %s, %s, %s, %s);", (title, publisher, subject, path, post.published, post.links[0].href, summary, media))
 
-    conn.commit()
+    	    conn.commit()
+
     time.sleep(refresh)
     break
