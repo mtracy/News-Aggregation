@@ -29,6 +29,8 @@ where `inputfile` is a pipe-delimited input file containing RSS feeds that you a
 {RSS URL}|{Publishing Site (for example, NBC}|{Subject content of the RSS (e.g. "general news" or "technology"}|{the desired rate at which you want to check the RSS feed in seconds}
 ```
 
+Another thing to note is that the runner spawns independent python processes for each of the rss feeds that you are listening to. This should be improved in the future, but for now you need to make a note of which processes you start so that you can kill them after the initializes all of them.
+
 # Database Scheme
 
 The database that is created has the following schema
