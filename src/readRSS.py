@@ -64,4 +64,3 @@ while(1):
     	    conn.commit()
 
     time.sleep(refresh)
-    break
