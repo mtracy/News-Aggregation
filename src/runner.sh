@@ -1,5 +1,3 @@
-input=../input
-
 
 while IFS='' read -r line || [[ -n "$line" ]]; do
     while IFS='|' read -ra ADDR; do
